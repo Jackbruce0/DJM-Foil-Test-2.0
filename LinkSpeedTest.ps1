@@ -11,11 +11,12 @@ function Convert-LinkSpeed {
     param (
         [string]$RawSpeed
     )
-    $numericSpeed = [regex]::Match($RawSpeed, '\d+').Value
+    # Match numeric parts including decimals
+    $numericSpeed = [regex]::Match($RawSpeed, '\d+(\.\d+)?').Value
 
     if ($RawSpeed -like "*Gbps") {
         return @{
-            Value = [int]$numericSpeed
+            Value = [double]$numericSpeed
             Unit = "Gbps"
         }
     } elseif ($RawSpeed -like "*Mbps") {
@@ -30,6 +31,7 @@ function Convert-LinkSpeed {
         }
     }
 }
+
 
 # Get all available network adapters
 $adapters = Get-NetAdapter | Select-Object Name, Status
